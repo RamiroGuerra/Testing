@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,6 +16,7 @@ public class TurnedBasedSystemScript : MonoBehaviour
     public enum States { setUp, playerTurnA, playerTurnB, enemyTurn, won, lose}
     public States state;
     public TextMeshProUGUI stateText; 
+    public GameObject btnAction; 
 
     // Start is called before the first frame update
     void Start()
@@ -53,11 +55,19 @@ public class TurnedBasedSystemScript : MonoBehaviour
     }
 
 
+    public GameObject Action{
+        get { return btnAction; }
+        set { btnAction = value; }
+    }
+
+
     public void ButtonPressed(Button _btn){
         if(state != States.playerTurnA)
             return; 
         stateText.text = "Select Enemy: ";
+        btnAction =  GameObject.Find("TestAttack");
         Debug.Log(_btn);
+        Debug.Log(btnAction);
         // save btn, deactivate buttons, wait for enemy selection
         state = States.playerTurnB;
         StartCoroutine(WaitForSelectEnemy());
@@ -71,13 +81,15 @@ public class TurnedBasedSystemScript : MonoBehaviour
         bool loop = false; 
         while(!loop){
             // if click on enemy, loop = true
-            Debug.Log("in loop ");
+            //Debug.Log("in loop ");
             if(Input.GetKeyDown("backspace")){
                 stateText.text = "Abort action... ";
                 yield return new WaitForSeconds(2f);
                 StartCoroutine(PlayerTurn()); 
                 loop = true; 
             }
+
+            //
 
             yield return null; 
         }
